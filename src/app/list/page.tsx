@@ -2,9 +2,14 @@
 
 import { useEffect, useState } from "react";
 
+interface Post{
+    id:number, 
+    title:string
+}
+
 export default function Home() {
 
-    const [posts, setPosts] = useState([]);
+    const [posts, setPosts] = useState<Post[]>([]);
 
     useEffect(() => {
         fetch("http://localhost:8080/api/v1/posts")
@@ -19,7 +24,7 @@ export default function Home() {
       <div className="flex flex-col gap-4">
         <h1>글 목록</h1>
         <ul>
-        {posts.map((post: {id:number, title:string}) => (
+        {posts.map((post) => (
           <li key={post.id}>
             {post.id} : {post.title}
           </li>
