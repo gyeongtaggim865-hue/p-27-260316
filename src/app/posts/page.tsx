@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 
 
 
-export default function Home() {
+export default function List() {
 
     const [posts, setPosts] = useState<PostDto[]>([]);
 
