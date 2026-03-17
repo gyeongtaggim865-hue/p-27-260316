@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 
-interface Post{
-    id:number, 
-    title:string
+interface Post {
+    id: number,
+    title: string
 }
 
 export default function Home() {
@@ -20,16 +20,20 @@ export default function Home() {
             })
     }, []);
 
-      return (
-      <div className="flex flex-col gap-4">
-        <h1>글 목록</h1>
-        <ul>
-        {posts.map((post) => (
-          <li key={post.id}>
-            {post.id} : {post.title}
-          </li>
-        ))}
-        </ul>
-      </div>
-      );
+    return (
+        posts.length <= 0
+            ? <div>로딩중..</div>
+            :
+            (<div className="flex flex-col gap-4">
+                <h1>글 목록</h1>
+                <ul>
+                    {posts.map((post) => (
+                        <li key={post.id}>
+                            {post.id} : {post.title}
+                        </li>
+                    ))}
+                </ul>
+            </div>
+            )
+    );
 }
