@@ -1,8 +1,11 @@
 "use client"
 
 import { fetchApi } from "@/lib/client";
+import { useRouter } from "next/navigation";
 
 export default function Write() {
+
+    const router = useRouter();
 
     const onSubmitHandler = (e: any) => {
         e.preventDefault();
@@ -21,7 +24,7 @@ export default function Write() {
             content.focus();
             return;
         }
-        
+
         //db에 저장
         fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/posts`, {
             method: "POST",
@@ -34,10 +37,13 @@ export default function Write() {
             })
         })
             .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                alert(data);
+            .then(rs => {
+                alert(rs.msg);
+
+                // 글 상세 페이지로 이동
+                router.push(`/posts/${rs.data.PostDto.id}`)
             })
+
     }
 
     return (
