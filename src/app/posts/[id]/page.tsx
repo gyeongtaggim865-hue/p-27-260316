@@ -6,23 +6,23 @@ import { PostCommentDto, PostDto } from "@/type/post";
 import { fetchApi } from "@/lib/client";
 import Link from "next/link";
 
-export default function Home() {
+export default function Detail() {
 
     const [post, setPost] = useState<PostDto | null>(null);
-    const { id } = useParams();
+    const { id: postId } = useParams();
     const router = useRouter();
-    const [postComments, setPostComments] = useState<PostCommentDto[]>([]);
+    const [postComments, setPostComments] = useState<PostCommentDto[] | null>(null);
 
     useEffect(() => {
-        fetchApi(`/api/v1/posts/${id}`)
+        fetchApi(`/api/v1/posts/${postId}`)
             .then(data => setPost(data));
-        fetchApi(`/api/v1/posts/${id}/comments`)
-        .then(setPostComments);
+        fetchApi(`/api/v1/posts/${postId}/comments`)
+            .then(setPostComments);
     }, []);
 
-    const onDeleteHandler = (id: number) => {
+    const onDeleteHandler = (postId: number) => {
 
-        fetchApi(`/api/v1/posts/${id}`, {
+        fetchApi(`/api/v1/posts/${postId}`, {
             method: "DELETE"
         })
             .then((rs) => {
@@ -31,12 +31,20 @@ export default function Home() {
             })
     }
 
+    const deletePostComment = (commentId: number) => {
+        fetchApi(`/api/v1/posts/${postId}/comments/${commentId}`, {
+            method: "DELETE",
+        }).then((data) => {
+            alert(data.msg);
+        });
+    };
+
     return (
         <>
             {post === null
                 ? <div>로딩중..</div>
                 : <div className="flex flex-col gap-8 items-center">
-                    <div>{id}번 글 상세페이지</div>
+                    <div>{postId}번 글 상세페이지</div>
                     <div>
                         <h1>{post.title}</h1>
                         <div>{post.content}</div>
@@ -52,15 +60,26 @@ export default function Home() {
                     </div>
                 </div>
             }
+
             <h2 className="p-2">댓글 목록</h2>
 
-            {postComments.length === 0 && <div>댓글이 없습니다.</div>}
-
-            {postComments.length > 0 && (
-                <ul>
+            {postComments === null && <div>Loding..</div>}
+            {postComments !== null && postComments.length === 0 && <div>댓글이 없습니다.</div>}
+            {postComments !== null && postComments.length > 0 && (
+                <ul className="flex flex-col gap-2">
                     {postComments.map((postComment) => (
-                        <li key={postComment.id}>
-                            {postComment.id} : {postComment.content}
+                        <li key={postComment.id} className="flex gap-2 items-center">
+                            <span>{postComment.id} : </span>
+                            <span>{postComment.content}</span>
+                            <button className="border-2 p-2 rounded">수정</button>
+                            <button
+                                className="border-2 p-2 rounded"
+                                onClick={() => {
+                                    deletePostComment(postComment.id);
+                                }}
+                            >
+                                삭제
+                            </button>
                         </li>
                     ))}
                 </ul>
