@@ -15,11 +15,11 @@ export default function Detail() {
 
     useEffect(() => {
         fetchApi(`/api/v1/posts/${postId}`)
-        .then(setPost)
-        .catch((err) => {
-          alert(err);
-          router.replace("/posts");
-        });
+            .then(setPost)
+            .catch((err) => {
+                alert(err);
+                router.replace("/posts");
+            });
         fetchApi(`/api/v1/posts/${postId}/comments`)
             .then(setPostComments);
     }, []);
@@ -70,8 +70,25 @@ export default function Detail() {
                         }}
                             className="border-1 rounded p-2 bg-red-500">삭제</button>
                     </div>
+                    <PostCommentList 
+                        postComments={postComments}
+                        deletePostComment={deletePostComment}
+                    />
                 </div>
             }
+
+
+        </>
+    );
+}
+
+function PostCommentList({postComments, deletePostComment} : {
+    postComments: PostCommentDto[] | null, 
+    deletePostComment: (commentId: number) => void
+}) {
+
+    return (
+        <>
 
             <h2 className="p-2">댓글 목록</h2>
 
@@ -97,5 +114,5 @@ export default function Detail() {
                 </ul>
             )}
         </>
-    );
+    )
 }
