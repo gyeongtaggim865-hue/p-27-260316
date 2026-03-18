@@ -9,13 +9,12 @@ export default function Edit() {
 
     const [post, setPost] = useState<PostDto | null>(null);
     const router = useRouter();
-    const {id} = useParams();
+    const { id } = useParams();
 
     useEffect(() => {
         fetchApi(`/api/v1/posts/${id}`)
             .then(setPost);
     }, []);
-
 
     const onSubmitHandler = (e: any) => {
         e.preventDefault();
@@ -47,29 +46,28 @@ export default function Edit() {
             return;
         }
 
-
-        //db에 저장
-        fetchApi(`/api/v1/posts`, {
-            method: "POST",
+        //db에 수정
+        fetchApi(`/api/v1/posts/${id}`, {
+            method: "PUT",
             body: JSON.stringify({
                 "title": title.value,
                 "content": content.value
             })
         })
             .then(rs => {
-                alert("글이 정상적으로 작성되었습니다.");
+                alert("글이 정상적으로 수정되었습니다.");
                 // 글 상세 페이지로 이동
-                router.replace(`/posts/${rs.data.postDto.id}`)
+                router.replace(`/posts/${id}`)
             })
-        }
+    }
 
-if(post == null) return <div>로딩중..</div>
+    if (post == null) return <div>로딩중..</div>
 
-        return (
-            <>
+    return (
+        <>
             <h1>글 수정</h1>
 
-            <form action="" onSubmit={onSubmitHandler} className="flex flex-col gap-4">
+            <form onSubmit={onSubmitHandler} className="flex flex-col gap-4">
                 <input
                     type="text"
                     name="title"
@@ -89,6 +87,5 @@ if(post == null) return <div>로딩중..</div>
                 </button>
             </form>
         </>
-        )
-    
+    )
 }
