@@ -15,7 +15,11 @@ export default function Detail() {
 
     useEffect(() => {
         fetchApi(`/api/v1/posts/${postId}`)
-            .then(data => setPost(data));
+        .then(setPost)
+        .catch((err) => {
+          alert(err);
+          router.replace("/posts");
+        });
         fetchApi(`/api/v1/posts/${postId}/comments`)
             .then(setPostComments);
     }, []);
@@ -36,6 +40,14 @@ export default function Detail() {
             method: "DELETE",
         }).then((data) => {
             alert(data.msg);
+
+
+            if (postComments === null) return;
+
+            // 리렌더링을 위한 댓글 배열 교체 필요
+            setPostComments(
+                postComments.filter((postComment) => postComment.id !== commentId)
+            );
         });
     };
 
